@@ -12,7 +12,7 @@ import com.memtrip.xcodebuild.utils.FileUtils;
 import com.memtrip.xcodebuild.utils.StringUtils;
 
 /**
- * @goal generate
+ * @goal build
  * @requiresProject false
  */
 public class EntryPoint extends AbstractMojo {
@@ -44,6 +44,13 @@ public class EntryPoint extends AbstractMojo {
 	 * @parameter default-value="${project.build.directory}"
 	 */
 	private String mavenBuildDirectoryParam;
+	
+	/**
+	 * The system password that will execute the copy
+	 * TODO: This is a terrible implementation and requires more thought...
+	 * @parameter 
+	 */
+	private String sysPasswordParam;
 
 	/**
 	 * projectDirParam
@@ -67,6 +74,9 @@ public class EntryPoint extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (xcodebuildExecParam == null) 
 			xcodebuildExecParam = DEFAULT_XCODEBUILD_EXEC;
+		
+		if (sysPasswordParam == null)
+			throw new IllegalArgumentException("A sys password is required to copy xcodebuild artefacts");
 		
 		// execute the xcode process
 		ArrayList<String> output = executeXcodeProcess();
@@ -121,13 +131,15 @@ public class EntryPoint extends AbstractMojo {
 		ProcessBuilder processBuilder = FileUtils.copyArtefact(
 			symlinkPath, 
 			mavenBuildDirectoryParam + "/ios",
-			projectDirParam
+			projectDirParam,
+			sysPasswordParam
 		);
 		
 		ExecProcess execProcess = new ExecProcess(processBuilder);
-		int result = execProcess.start(); 
+		int result = execProcess.start();
 		
-		if (result != ExecProcess.UNIX_SUCCESS) {
+		if (result != ExecProcess.XCODE_SUCCESS) {
+			System.out.println(StringUtils.arrayListOut(execProcess.getOutput()));
 			throw new MojoExecutionException("Copying xcode artifacts failed"); 
 		} else {
 			System.out.println("**Files copied**");
