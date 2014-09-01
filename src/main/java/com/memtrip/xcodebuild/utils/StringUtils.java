@@ -19,7 +19,7 @@ public class StringUtils {
 		String[] copySplit = copy.split(" ");
 		String path = copySplit[copySplit.length-1];
 		String[] artefactDir = path.split(UNIVERSAL_BUILD_TARGET);
-		return artefactDir[0] + "/" + UNIVERSAL_BUILD_TARGET;
+		return artefactDir[0];
     }
     
     /**
