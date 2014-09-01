@@ -30,4 +30,22 @@ public class FileUtils {
 		processBuilder.redirectErrorStream(true);
 		return processBuilder;
 	}
+	
+	/**
+	 * 
+	 * @param projectBuildDir
+	 * @param sysPassword
+	 * @return
+	 */
+	public static final ProcessBuilder chmodArtefact(String projectBuildDir, String sysPassword) {
+		ProcessBuilder processBuilder = new ProcessBuilder(
+			"/bin/bash",
+			"-c",
+			"echo " + sysPassword + "| sudo -S chmod -R 777 " + projectBuildDir
+		);
+		
+		processBuilder.directory(new File(projectBuildDir));
+		processBuilder.redirectErrorStream(true);
+		return processBuilder;
+	}
 }

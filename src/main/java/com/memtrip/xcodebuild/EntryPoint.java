@@ -119,7 +119,7 @@ public class EntryPoint extends AbstractMojo {
 		XcodeProcessBuilder xcodeProcessBuilder = new XcodeProcessBuilder(xcodebuildExecParam);
 		xcodeProcessBuilder.setDirectory(projectDirParam);
 		xcodeProcessBuilder.setScheme(schemeParam);
-		xcodeProcessBuilder.setConfiguration(true, true);
+		xcodeProcessBuilder.setConfiguration(true, false);
 		ProcessBuilder processBuilder = xcodeProcessBuilder.getProcessBuilder();
 		
 		// execute the xcodebuild process
@@ -146,8 +146,12 @@ public class EntryPoint extends AbstractMojo {
 			sysPasswordParam
 		);
 		
+		// run the copy process
 		ExecProcess execProcess = new ExecProcess(processBuilder);
 		int result = execProcess.start();
+		
+		// chmod the copy artefacts
+		new ExecProcess(FileUtils.chmodArtefact(projectDirParam, sysPasswordParam)).start();
 		
 		if (result != ExecProcess.XCODE_SUCCESS) {
 			System.out.println(StringUtils.arrayListOut(execProcess.getOutput()));
