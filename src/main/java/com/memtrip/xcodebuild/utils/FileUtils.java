@@ -16,17 +16,7 @@ public class FileUtils {
 	 * @param	processDirectory	Where the process will run
 	 * @return
 	 */
-	public static final ProcessBuilder copyArtefact(String buildProductDir, String projectBuildDir, String processDirectory, String sysPassword) {
-//		ProcessBuilder processBuilder = new ProcessBuilder(
-//			"/bin/bash",
-//			"-c",
-//			"echo " + sysPassword + "| sudo -S ls",
-//			"cp",
-//			"-R",
-//			buildProductDir,
-//			projectBuildDir
-//		);
-		
+	public static final ProcessBuilder copyArtefact(String buildProductDir, String projectBuildDir, String processDirectory, String sysPassword) {		
 		ProcessBuilder processBuilder = new ProcessBuilder(
 			"/bin/bash",
 			"-c",
