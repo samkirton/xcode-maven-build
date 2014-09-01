@@ -23,6 +23,9 @@ public class FileUtils {
 			"echo " + sysPassword + "| sudo -S cp -R " + buildProductDir + " " + projectBuildDir
 		);
 		
+		System.out.println("RUNNING COPY:");
+		System.out.println("cp -R " + buildProductDir + " " + projectBuildDir);
+		
 		processBuilder.directory(new File(processDirectory));
 		processBuilder.redirectErrorStream(true);
 		return processBuilder;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author memtrip
  */
 public class StringUtils {
-	private static String UNIVERSAL_BUILD_TARGET = "Release-iphoneuniversal";
+	public static String UNIVERSAL_BUILD_TARGET = "Release-iphoneuniversal";
     
     /**
      * Resolve the xcodebuild symlink path from the provided line in file

@@ -95,7 +95,7 @@ public class EntryPoint extends AbstractMojo {
 		// get the symlinkPath from the xcodebuild output
 		String symlinkPath = null;
 		for (String line : output) {
-			if (line.contains("-resolve-src-symlinks")) {
+			if (line.contains(StringUtils.UNIVERSAL_BUILD_TARGET)) {
 				symlinkPath = StringUtils.resolveSymlinkPath(line);
 				break;
 			}
@@ -140,7 +140,7 @@ public class EntryPoint extends AbstractMojo {
 	private void executeCopyProcess(String symlinkPath) throws MojoExecutionException {
 		ProcessBuilder processBuilder = FileUtils.copyArtefact(
 			symlinkPath, 
-			mavenBuildDirectoryParam + "/ios",
+			mavenBuildDirectoryParam + "ios",
 			projectDirParam,
 			sysPasswordParam
 		);
