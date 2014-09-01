@@ -15,6 +15,19 @@ public class XcodeProcessBuilder {
 		commandList.add(scheme);
 	}
 	
+	public void setConfiguration(boolean isRelease, boolean isClean) {
+		commandList.add("-configuration");
+		
+		if (isRelease) {
+			commandList.add("Release");
+		} else {
+			commandList.add("Debug");
+		}
+		
+		if (isClean)
+			commandList.add("clean");
+	}
+	
 	public void setDirectory(String directory) {
 		this.directory = directory;
 	}

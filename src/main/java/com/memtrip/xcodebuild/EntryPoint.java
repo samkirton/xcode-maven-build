@@ -119,6 +119,7 @@ public class EntryPoint extends AbstractMojo {
 		XcodeProcessBuilder xcodeProcessBuilder = new XcodeProcessBuilder(xcodebuildExecParam);
 		xcodeProcessBuilder.setDirectory(projectDirParam);
 		xcodeProcessBuilder.setScheme(schemeParam);
+		xcodeProcessBuilder.setConfiguration(true, true);
 		ProcessBuilder processBuilder = xcodeProcessBuilder.getProcessBuilder();
 		
 		// execute the xcodebuild process
