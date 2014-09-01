@@ -66,8 +66,18 @@ public class EntryPoint extends AbstractMojo {
 		schemeParam = newVal;
 	}
 	
+	/**
+	 * mavenBuildDirectoryParam
+	 */
 	public void setMavenBuildDirectory(String newVal) {
 		mavenBuildDirectoryParam = newVal;
+	}
+	
+	/**
+	 * sysPassword
+	 */
+	public void setSysPassword(String newVal) {
+		sysPasswordParam = newVal;
 	}
 	
 	@Override

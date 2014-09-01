@@ -17,14 +17,20 @@ public class FileUtils {
 	 * @return
 	 */
 	public static final ProcessBuilder copyArtefact(String buildProductDir, String projectBuildDir, String processDirectory, String sysPassword) {
+//		ProcessBuilder processBuilder = new ProcessBuilder(
+//			"/bin/bash",
+//			"-c",
+//			"echo " + sysPassword + "| sudo -S ls",
+//			"cp",
+//			"-R",
+//			buildProductDir,
+//			projectBuildDir
+//		);
+		
 		ProcessBuilder processBuilder = new ProcessBuilder(
 			"/bin/bash",
 			"-c",
-			"echo " + sysPassword + "| sudo -S ls",
-			"cp",
-			"-R",
-			buildProductDir,
-			projectBuildDir
+			"echo " + sysPassword + "| sudo -S cp -R " + buildProductDir + " " + projectBuildDir
 		);
 		
 		processBuilder.directory(new File(processDirectory));
