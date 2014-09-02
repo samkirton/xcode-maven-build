@@ -27,7 +27,7 @@ public class XcodeProcessBuilder {
 		if (isClean)
 			commandList.add("clean");
 	}
-	
+
 	public void setDirectory(String directory) {
 		this.directory = directory;
 	}

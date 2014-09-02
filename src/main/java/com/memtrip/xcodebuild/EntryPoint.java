@@ -8,7 +8,6 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import com.memtrip.xcodebuild.bash.ExecProcess;
 import com.memtrip.xcodebuild.bash.XcodeProcessBuilder;
-import com.memtrip.xcodebuild.utils.FileUtils;
 import com.memtrip.xcodebuild.utils.StringUtils;
 
 /**
@@ -38,19 +37,6 @@ public class EntryPoint extends AbstractMojo {
 	 * @parameter
 	 */
 	private String schemeParam;
-	
-	/**
-	 * The maven build directory
-	 * @parameter default-value="${project.build.directory}"
-	 */
-	private String mavenBuildDirectoryParam;
-	
-	/**
-	 * The system password that will execute the copy
-	 * TODO: This is a terrible implementation and requires more thought...
-	 * @parameter 
-	 */
-	private String sysPasswordParam;
 
 	/**
 	 * projectDirParam
@@ -66,47 +52,14 @@ public class EntryPoint extends AbstractMojo {
 		schemeParam = newVal;
 	}
 	
-	/**
-	 * mavenBuildDirectoryParam
-	 */
-	public void setMavenBuildDirectory(String newVal) {
-		mavenBuildDirectoryParam = newVal;
-	}
-	
-	/**
-	 * sysPassword
-	 */
-	public void setSysPassword(String newVal) {
-		sysPasswordParam = newVal;
-	}
-	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (xcodebuildExecParam == null) 
 			xcodebuildExecParam = DEFAULT_XCODEBUILD_EXEC;
 		
-		if (sysPasswordParam == null)
-			throw new IllegalArgumentException("A sys password is required to copy xcodebuild artefacts");
-		
 		// execute the xcode process
 		ArrayList<String> output = executeXcodeProcess();
 		System.out.println(StringUtils.arrayListOut(output));
-		
-		// get the symlinkPath from the xcodebuild output
-		String symlinkPath = null;
-		for (String line : output) {
-			if (line.contains(StringUtils.UNIVERSAL_BUILD_TARGET)) {
-				symlinkPath = StringUtils.resolveSymlinkPath(line);
-				break;
-			}
-		}
-		
-		// ensure the xcodebuild output can be resolved
-		if (symlinkPath == null)
-			throw new MojoExecutionException("Could not resolve xcodebuild output");
-		
-		// copy the xcodebuild output to a new directory
-		executeCopyProcess(symlinkPath);
 	}
 	
 	/**
@@ -131,33 +84,5 @@ public class EntryPoint extends AbstractMojo {
 			throw new MojoExecutionException("xcodebuild FAILED");
 		
 		return execProcess.getOutput();
-	}
-	
-	/**
-	 * Copy the xcodebuild output to the maven directory
-	 * @param	symlinkPath	The path of the xcodebuild output
-	 * @throws MojoExecutionException
-	 */
-	private void executeCopyProcess(String symlinkPath) throws MojoExecutionException {
-		ProcessBuilder processBuilder = FileUtils.copyArtefact(
-			symlinkPath, 
-			mavenBuildDirectoryParam + "ios",
-			projectDirParam,
-			sysPasswordParam
-		);
-		
-		// run the copy process
-		ExecProcess execProcess = new ExecProcess(processBuilder);
-		int result = execProcess.start();
-		
-		// chmod the copy artefacts
-		new ExecProcess(FileUtils.chmodArtefact(projectDirParam, sysPasswordParam)).start();
-		
-		if (result != ExecProcess.XCODE_SUCCESS) {
-			System.out.println(StringUtils.arrayListOut(execProcess.getOutput()));
-			throw new MojoExecutionException("Copying xcode artifacts failed"); 
-		} else {
-			System.out.println("**Files copied**");
-		}
 	}
 }	
