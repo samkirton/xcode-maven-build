@@ -37,6 +37,12 @@ public class EntryPoint extends AbstractMojo {
 	 * @parameter
 	 */
 	private String schemeParam;
+	
+	/**
+	 * The build directory
+	 * @parameter
+	 */
+	private String buildDirParam;
 
 	/**
 	 * projectDirParam
@@ -50,6 +56,13 @@ public class EntryPoint extends AbstractMojo {
 	 */
 	public void setScheme(String newVal) {
 		schemeParam = newVal;
+	}
+	
+	/**
+	 * buildDirParam
+	 */
+	public void setBuildDir(String newVal) {
+		buildDirParam = newVal;
 	}
 	
 	@Override
@@ -72,13 +85,14 @@ public class EntryPoint extends AbstractMojo {
 		XcodeProcessBuilder xcodeProcessBuilder = new XcodeProcessBuilder(xcodebuildExecParam);
 		xcodeProcessBuilder.setDirectory(projectDirParam);
 		xcodeProcessBuilder.setScheme(schemeParam);
+		xcodeProcessBuilder.setBuildDir(buildDirParam);
 		xcodeProcessBuilder.setConfiguration(true, false);
 		ProcessBuilder processBuilder = xcodeProcessBuilder.getProcessBuilder();
 		
 		// execute the xcodebuild process
 		ExecProcess execProcess = new ExecProcess(processBuilder);
 		int result = execProcess.start();
-		System.out.println(execProcess.getOutput());
+		System.out.println(StringUtils.arrayListOut(execProcess.getOutput()));
 		
 		if (result != ExecProcess.XCODE_SUCCESS)
 			throw new MojoExecutionException("xcodebuild FAILED");

@@ -14,6 +14,7 @@ public class EntryPointJar {
 			EntryPoint entryPoint = new EntryPoint();
 			entryPoint.setProjectDir("");
 			entryPoint.setScheme("");
+			entryPoint.setBuildDir("");
 			entryPoint.execute();
 		} catch (MojoExecutionException e) {
 		} catch (MojoFailureException e) {}

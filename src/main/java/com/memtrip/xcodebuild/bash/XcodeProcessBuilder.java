@@ -11,8 +11,10 @@ public class XcodeProcessBuilder {
 	private String directory;
 	
 	public void setScheme(String scheme) {
-		commandList.add("-scheme");
-		commandList.add(scheme);
+		if (scheme != null) {
+			commandList.add("-scheme");
+			commandList.add(scheme);
+		}
 	}
 	
 	public void setConfiguration(boolean isRelease, boolean isClean) {
@@ -26,6 +28,11 @@ public class XcodeProcessBuilder {
 		
 		if (isClean)
 			commandList.add("clean");
+	}
+	
+	public void setBuildDir(String buildDir) {
+		if (buildDir != null)
+			commandList.add("BUILD_DIR="+buildDir);
 	}
 
 	public void setDirectory(String directory) {
