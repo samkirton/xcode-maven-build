@@ -17,6 +17,18 @@ public class XcodeProcessBuilder {
 		}
 	}
 	
+	public void setProvisioningProfile(String provisioningProfile) {
+		if (provisioningProfile != null) {
+			commandList.add("PROVISIONING_PROFILE=" + provisioningProfile + "");
+		}
+	}
+	
+	public void setCodeSigningIdentity(String codeSigningIdentity) {
+		if (codeSigningIdentity != null) {
+			commandList.add("CODE_SIGN_IDENTITY=\"" + codeSigningIdentity + "\"");
+		}
+	}
+	
 	public void setConfiguration(boolean isRelease, boolean isClean) {
 		commandList.add("-configuration");
 		

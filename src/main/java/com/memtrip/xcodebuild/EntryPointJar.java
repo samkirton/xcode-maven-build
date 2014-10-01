@@ -13,8 +13,9 @@ public class EntryPointJar {
 			// Provide these values to test the plugin from the java entry point
 			EntryPoint entryPoint = new EntryPoint();
 			entryPoint.setProjectDir("");
-			entryPoint.setScheme("");
 			entryPoint.setBuildDir("");
+			entryPoint.setScheme("");
+			entryPoint.setProvisioningProfile("");
 			entryPoint.execute();
 		} catch (MojoExecutionException e) {
 		} catch (MojoFailureException e) {}

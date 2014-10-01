@@ -33,16 +33,28 @@ public class EntryPoint extends AbstractMojo {
 	private String projectDirParam;
 	
 	/**
+	 * The build directory
+	 * @parameter
+	 */
+	private String buildDirParam;
+	
+	/**
 	 * An optional scheme that the xcodebuild should target
 	 * @parameter
 	 */
 	private String schemeParam;
 	
 	/**
-	 * The build directory
+	 * An optional provisioning profile 
 	 * @parameter
 	 */
-	private String buildDirParam;
+	private String provisioningProfile;
+	
+	/**
+	 * An optional code signing identity
+	 * @parameter
+	 */
+	private String codeSigningIdentity;
 
 	/**
 	 * projectDirParam
@@ -65,6 +77,20 @@ public class EntryPoint extends AbstractMojo {
 		buildDirParam = newVal;
 	}
 	
+	/**
+	 * provisioningProfile
+	 */
+	public void setProvisioningProfile(String newVal) {
+		provisioningProfile = newVal;
+	}
+	
+	/**
+	 * codeSigningIdentity
+	 */
+	public void setCodeSigningIdentity(String newVal) {
+		codeSigningIdentity = newVal;
+	}
+	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (xcodebuildExecParam == null) 
@@ -84,8 +110,10 @@ public class EntryPoint extends AbstractMojo {
 		// create the xcodebuild command
 		XcodeProcessBuilder xcodeProcessBuilder = new XcodeProcessBuilder(xcodebuildExecParam);
 		xcodeProcessBuilder.setDirectory(projectDirParam);
-		xcodeProcessBuilder.setScheme(schemeParam);
 		xcodeProcessBuilder.setBuildDir(buildDirParam);
+		xcodeProcessBuilder.setScheme(schemeParam);
+		xcodeProcessBuilder.setProvisioningProfile(provisioningProfile);
+		xcodeProcessBuilder.setCodeSigningIdentity(codeSigningIdentity);
 		xcodeProcessBuilder.setConfiguration(true, false);
 		ProcessBuilder processBuilder = xcodeProcessBuilder.getProcessBuilder();
 		
