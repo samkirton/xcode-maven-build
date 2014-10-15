@@ -25,13 +25,31 @@ public class StringUtils {
     /**
      * Covert the provided array list to a string
      * @param	arrayList	The array list to convert to a string
+     * @param	includeSpaces	Should each value be seperated by spaces?
      * @return	The arrayList as a string
      */
-    public static String arrayListOut(ArrayList<String> arrayList) {
+    public static String arrayListOut(ArrayList<String> arrayList, boolean includeSpaces) {
     	StringBuilder sb = new StringBuilder();
-    	for (String string : arrayList)
+    	for (String string : arrayList) {
+    		if (includeSpaces)
+    			sb.append(" ");	
+    		
     		sb.append(string);	
+    	}
 
     	return sb.toString();
+    }
+    
+    /**
+     * Split a comma seperated list into a String array
+     * @param	commaList	A comma separate app
+     * @return	An array of 
+     */
+    public static String[] buildArrayFromCommaSeperatedList(String commaList) {
+    	String[] commaArray = null;
+    	if (commaList != null)
+    		commaArray = commaList.split(",");
+    	
+    	return commaArray;
     }
 }

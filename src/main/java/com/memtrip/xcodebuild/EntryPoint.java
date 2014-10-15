@@ -24,81 +24,174 @@ public class EntryPoint extends AbstractMojo {
 	 * The location of the xcodebuild executable
 	 * @parameter
 	 */
-	private String xcodebuildExecParam;
+	private String xcodebuildExec;
 	
 	/**
 	 * The location of the project file
 	 * @parameter
 	 */
-	private String projectDirParam;
+	private String directory;
 	
 	/**
 	 * The build directory
 	 * @parameter
 	 */
-	private String buildDirParam;
+	private String buildDir;
 	
 	/**
-	 * An optional scheme that the xcodebuild should target
+	 * An optional -scheme that the xcodebuild should target
 	 * @parameter
 	 */
-	private String schemeParam;
+	private String scheme;
 	
 	/**
-	 * An optional provisioning profile 
+	 * An optional -project that the xcodebuild should target
 	 * @parameter
 	 */
-	private String provisioningProfile;
+	private String project;
 	
 	/**
-	 * An optional code signing identity
+	 * An optional -sdk that the xcodebuild should target
 	 * @parameter
 	 */
-	private String codeSigningIdentity;
+	private String sdk;
+	
+	/**
+	 * An optional -archivePath that the xcodebuild should target
+	 */
+	private String archivePath;
+	
+	/**
+	 * An optional -exportArchive that the xcodebuild should target
+	 */
+	private boolean exportArchive;
+	
+	/**
+	 * An optional -exportFormat that the xcodebuild should target
+	 */
+	private String exportFormat;
+	
+	private String exportProvisioningProfile;
+	
+	private String exportPath;
+	
+	/**
+	 * An optional comma seperated list of -configuration values (Release, Debug, Clean)
+	 * @parameter
+	 */
+	private String configuration;
+	
+	/**
+	 * An optional PROVISIONING_PROFILE constant 
+	 * @parameter
+	 */
+	private String provisioningProfileConstant;
+	
+	/**
+	 * An optional CODE_SIGNING_IDENTITY constant
+	 * @parameter
+	 */
+	private String codeSigningIdentityConstant;
 
 	/**
 	 * projectDirParam
 	 */
-	public void setProjectDir(String newVal) {
-		projectDirParam = newVal;
+	public void setDirectory(String newVal) {
+		directory = newVal;
 	}
 	
 	/**
 	 * scheme
 	 */
 	public void setScheme(String newVal) {
-		schemeParam = newVal;
+		scheme = newVal;
+	}
+	
+	/**
+	 * project
+	 */
+	public void setProject(String newVal) {
+		project = newVal;
+	}
+	
+	/**
+	 * sdk
+	 */
+	public void setSDK(String newVal) {
+		sdk = newVal;
+	}
+	
+	/**
+	 * archivePath
+	 */
+	public void setArchivePath(String newVal) {
+		archivePath = newVal;
+	}
+	
+	/**
+	 * exportArchive
+	 */
+	public void setExportArchive(boolean newVal) {
+		exportArchive = newVal;
+	}
+	
+	/**
+	 * exportFormat
+	 */
+	public void setExportFormat(String newVal) {
+		exportFormat = newVal;
+	}
+	
+	/**
+	 * exportPath
+	 */
+	public void setExportPath(String newVal) {
+		exportPath = newVal;
+	}
+	
+	/**
+	 * exportProvisioningProfile
+	 */
+	public void setExportProvisioningProfile(String newVal) {
+		exportProvisioningProfile = newVal;
+	}
+	
+	/**
+	 * configuration
+	 */
+	public void setConfiguration(String newVal) {
+		configuration = newVal;
 	}
 	
 	/**
 	 * buildDirParam
 	 */
 	public void setBuildDir(String newVal) {
-		buildDirParam = newVal;
+		buildDir = newVal;
 	}
 	
 	/**
 	 * provisioningProfile
 	 */
-	public void setProvisioningProfile(String newVal) {
-		provisioningProfile = newVal;
+	public void setProvisioningProfileConstant(String newVal) {
+		provisioningProfileConstant = newVal;
 	}
 	
 	/**
 	 * codeSigningIdentity
 	 */
-	public void setCodeSigningIdentity(String newVal) {
-		codeSigningIdentity = newVal;
+	public void setCodeSigningIdentityConstant(String newVal) {
+		codeSigningIdentityConstant = newVal;
 	}
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		if (xcodebuildExecParam == null) 
-			xcodebuildExecParam = DEFAULT_XCODEBUILD_EXEC;
+		if (xcodebuildExec == null) 
+			xcodebuildExec = DEFAULT_XCODEBUILD_EXEC;
 		
 		// execute the xcode process
 		ArrayList<String> output = executeXcodeProcess();
-		System.out.println(StringUtils.arrayListOut(output));
+		System.out.println(StringUtils.arrayListOut(output,false));
 	}
 	
 	/**
@@ -108,19 +201,26 @@ public class EntryPoint extends AbstractMojo {
 	 */
 	private ArrayList<String> executeXcodeProcess() throws MojoExecutionException {
 		// create the xcodebuild command
-		XcodeProcessBuilder xcodeProcessBuilder = new XcodeProcessBuilder(xcodebuildExecParam);
-		xcodeProcessBuilder.setDirectory(projectDirParam);
-		xcodeProcessBuilder.setBuildDir(buildDirParam);
-		xcodeProcessBuilder.setScheme(schemeParam);
-		xcodeProcessBuilder.setProvisioningProfile(provisioningProfile);
-		xcodeProcessBuilder.setCodeSigningIdentity(codeSigningIdentity);
-		xcodeProcessBuilder.setConfiguration(true, false);
+		XcodeProcessBuilder xcodeProcessBuilder = new XcodeProcessBuilder(xcodebuildExec);
+		xcodeProcessBuilder.setDirectory(directory);
+		xcodeProcessBuilder.setBuildDir(buildDir);
+		xcodeProcessBuilder.setScheme(scheme);
+		xcodeProcessBuilder.setSdk(sdk);
+		xcodeProcessBuilder.setProject(project);
+		xcodeProcessBuilder.setArchivePath(archivePath);
+		xcodeProcessBuilder.setExportArchive(exportArchive);
+		xcodeProcessBuilder.setExportFormat(exportFormat);
+		xcodeProcessBuilder.setExportPath(exportPath);
+		xcodeProcessBuilder.setExportProvisioningProfile(exportProvisioningProfile);
+		xcodeProcessBuilder.setConfiguration(StringUtils.buildArrayFromCommaSeperatedList(configuration));
+		xcodeProcessBuilder.setProvisioningProfileConstant(provisioningProfileConstant);
+		xcodeProcessBuilder.setCodeSigningIdentityConstant(codeSigningIdentityConstant);
 		ProcessBuilder processBuilder = xcodeProcessBuilder.getProcessBuilder();
 		
 		// execute the xcodebuild process
 		ExecProcess execProcess = new ExecProcess(processBuilder);
 		int result = execProcess.start();
-		System.out.println(StringUtils.arrayListOut(execProcess.getOutput()));
+		System.out.println(StringUtils.arrayListOut(execProcess.getOutput(),false));
 		
 		if (result != ExecProcess.XCODE_SUCCESS)
 			throw new MojoExecutionException("xcodebuild FAILED");
